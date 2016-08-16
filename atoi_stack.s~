@@ -1,0 +1,40 @@
+.section .data
+car:
+	.byte 0
+
+.section .text
+
+.global atoi_stack
+
+.type atoi_stack, @function
+
+atoi_stack:
+	pushl %ebx		# salva in stack abx, ecx, edx
+	pushl %ecx
+	pushl %edx
+	movl %eax, %ecx		# sposta eax in ecx
+	xorl %eax, %eax		# azzera eax
+	xorl %edx, %edx		# azzera edx
+
+inizio:
+	xorl %ebx, %ebx		# azzera ebx
+	mov (%ecx, %edx), %bl	# sposta 
+	testb %bl, %bl
+	jz fine
+	movb %bl, car
+	subb $48, car
+	movl $10, %ebx
+	pushl %edx
+	mull %ebx
+	popl %edx
+	xorl %ebx, %ebx
+	movb car, %bl
+	addl %ebx, %eax
+	incl %edx
+	jmp inizio
+
+fine:
+	popl %edx
+	popl %ecx
+	popl %ebx
+	ret
